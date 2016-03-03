@@ -34,7 +34,6 @@ try {
 	} else if($b_code[0] == "U") {
 		$sql_select = "select m_uuid from tbl_univ_board where b_code = '".$b_code."' ";
 	}
-	$sql_select;
 	$rs = mysqli_query($connect, $sql_select);
 	if (!$rs) {
 		throw new Exception("error with database -1", 1);
@@ -58,9 +57,24 @@ try {
 		throw new Exception("error with database -3", 1);
 	}
 
+	if ($selected_m_uuid != $m_uuid) {
+		/*-------------------Push Apns-------------------*/
+		$sql_select2 = "select m_device_token from tbl_member where m_uuid = '".$selected_m_uuid."' ";
+		$rs = mysqli_query($connect, $sql_select2);
+		if (!$rs) {
+			throw new Exception("error with database -1", 1);
+		}
+		$row = mysqli_fetch_assoc($rs);
+	}
+	$device_token = $row['m_device_token'];
+	$alert = "속닥 게시물에 댓글이 달렸습니다. :]";
+
+	pushApns($device_token, $alert);
+	/*----------------------------------------------*/
+
 	$sql_insert = "INSERT INTO `bamboo`.`tbl_board_comment` ";
 	$sql_insert .= 		"(`b_code`, `m_uuid`, `regdt`, `comment`) ";
-	$sql_insert .= "	VALUES ('".$b_code."', '10101', date_format(now(),'%Y%m%d%H%i%s'), '".$comment."'); ";
+	$sql_insert .= "	VALUES ('".$b_code."', '".$m_uuid."', date_format(now(),'%Y%m%d%H%i%s'), '".$comment."'); ";
 
 	$rs = mysqli_query($connect, $sql_insert);
 	if (!$rs) {
@@ -71,6 +85,7 @@ try {
     	'message' => 'success'
     );
     echoJson($json);
+
 } catch (Exception $e) {
 	$json = array (
 		'state'   => '0',

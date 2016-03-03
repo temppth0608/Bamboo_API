@@ -13,6 +13,15 @@ require_once($_SERVER["DOCUMENT_ROOT"] . '/bamboo/func.php');
 
 $today = date("YmdHis");
 
+$sql_select = "select b_code, regdt from tbl_univ_board where b_notice_yn = 'Y' ";
+$rs = mysqli_query($connect, $sql_select);
+
+while ($row = mysqli_fetch_assoc($rs)) {
+	$b_code = $row['b_code'];
+	$regdt = $row['regdt'];
+
+	
+}
 //DB연결 해제
 mysqli_close($connect);
 ?>

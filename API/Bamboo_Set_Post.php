@@ -60,6 +60,22 @@ if ($moved) {
     	$select_insert = "INSERT INTO `bamboo`.`tbl_univ_board` 
 			(`b_code`, `m_uuid`, `b_contents`,`regdt`,`img_url`, `mov_url`, `b_blind_yn`, `b_univ`, `b_notice_yn`, `b_notice_date`) 
 			VALUES ('".$b_code."', '".$uuid."', '".$contents."',date_format(now(),'%Y%m%d%H%i%s') ,'".$fullUrl."', '', 'N', '".$univ."', '".$notice."', ''); ";
+
+        if ($notice = 'Y') {
+            $sql_select = "select m_device_token from tbl_member where m_univ = '".$univ."'; ";
+            $rs = mysqli_query($connect, $sql_select);
+
+            if(!$rs) {
+                throw new Exception("error with query -1", 1);
+            } 
+
+            while ($row = mysqli_fetch_assoc($rs)) {
+                $device_token = $row['m_device_token'];
+                $alert = $univ." 확성기 게시판에 새로운 글이 등록되었습니다.";
+
+                pushApns($device_token, $alert);
+            }
+        }
     }
     $rs = mysqli_query($connect, $select_insert);
 

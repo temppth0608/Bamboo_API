@@ -27,7 +27,8 @@ if(!isset($_REQUEST['uuid']) || empty($_REQUEST['uuid']) || !isset($_REQUEST['b_
 
 try {
 	$sql_select = "SELECT ";
-	$sql_select .= " a.regdt as '등록일' ";
+	$sql_select .= " a.idx as '댓글인덱스' ";
+	$sql_select .= " , a.regdt as '등록일' ";
 	$sql_select .= " , a.comment as '댓글내용' ";
 	$sql_select .= " , (select count(1) from tbl_comment_like where a.idx = bc_index and m_uuid = '".$m_uuid."') as '좋아요여부' ";
 	$sql_select .= " , (select count(1) from tbl_comment_like where a.idx = bc_index) as '댓글좋아요갯수' ";
@@ -43,12 +44,14 @@ try {
 	$json_array = array();
 
 	while ($row = mysqli_fetch_assoc($rs)) {
+		$idx = $row['댓글인덱스'];
 		$regdt = $row['등록일'];
 		$comment = $row['댓글내용'];
 		$isLike = $row['좋아요여부'];
 		$commentLikeCnt = $row['댓글좋아요갯수'];
 
 		$json = array (
+			'idx' => $idx,
 			'regdt' => $regdt,
 			'comment' => $comment,
 			'isLike' => $isLike,

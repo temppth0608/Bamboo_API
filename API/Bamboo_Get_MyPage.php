@@ -45,6 +45,7 @@ if ($type == "T01") {
 		$sql_select .= "	, date_format(regdt,'%a') as '요일' ";
 		$sql_select .= "	, date_format(regdt,'%H:%i %p') as '시간' ";
 		$sql_select .= "	, b_notice_yn as '확성기여부' ";
+		$sql_select .= "	, img_url as '이미지경로' ";
 		$sql_select .= "    , b_code ";
 		$sql_select .= " from tbl_univ_board ";
 		$sql_select .= "where 1=1 and m_uuid = '".$m_uuid."' ";
@@ -56,6 +57,7 @@ if ($type == "T01") {
 		$sql_select .= "	, date_format(regdt,'%a') as '요일' ";
 		$sql_select .= "	, date_format(regdt,'%H:%i %p') as '시간' ";
 		$sql_select .= "	, 'N' as '확성기여부' ";
+		$sql_select .= "	, img_url as '이미지경로' ";
 		$sql_select .= "    , b_code ";
 		$sql_select .= "from tbl_general_board ";
 		$sql_select .= "where 1=1 and m_uuid = '".$m_uuid."' ";
@@ -87,6 +89,7 @@ if ($type == "T01") {
 			$like_cnt = $row['조아요갯수'];
 			$comment_cnt = $row['댓글갯수'];
 			$keyword = $row['키워드'];
+			$img_url = $row['이미지경로'];
 
 			$json = array (
 				'b_code' => $b_code,
@@ -98,7 +101,8 @@ if ($type == "T01") {
 				'b_notice_yn' => $b_notice_yn,		
 				'like_cnt' => $like_cnt,	
 				'comment_cnt' => $comment_cnt,
-				'keyword' => $keyword
+				'keyword' => $keyword,
+				'img_url' => $img_url
 			);
 
 			array_push($json_array, $json);
